@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <h1>快篩站轉CDC格式</h1>
-    <p>選擇快篩站報表(.xlsx)，即會跳出轉換的檔案供存擋</p>
+    <p>選擇快篩站報表(.xlsx)，即會跳出轉換後的檔案供存檔</p>
     <div>
       <input type="file" @change="handleFileChange" ref="fileInput">
     </div>
