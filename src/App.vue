@@ -3,7 +3,7 @@
     <h1>快篩站轉CDC格式</h1>
     <p>選擇快篩站報表(.xlsx)，即會跳出轉換的檔案供存擋</p>
     <div>
-      <input type="file" @change="handleFileChange">
+      <input type="file" @change="handleFileChange" ref="fileInput">
     </div>
   </div>
 </template>
@@ -430,10 +430,10 @@ export default {
       let file = e.target.files[0];
       readXlsxFile(file).then((rows) => {
         console.log(rows)
-        this.exportCdcExcel(rows)
+        this.exportCdcExcel(rows, file.name.split('.')[0])
       })
     },
-    exportCdcExcel(rows) {
+    exportCdcExcel(rows, name) {
       rows.shift()
 
       let jsonData = rows.map(row => {
@@ -459,16 +459,17 @@ export default {
 
       console.log(jsonData)
 
-      let jsonWorkSheet = xlsx.utils.json_to_sheet(jsonData);
+      let jsonWorkSheet = xlsx.utils.json_to_sheet(jsonData)
 
       let workBook = {
         SheetNames: ['jsonWorkSheet'],
         Sheets: {
           'jsonWorkSheet': jsonWorkSheet,
         }
-      };
+      }
 
-      xlsx.writeFile(workBook, `./${name}_CDC.xlsx`);
+      xlsx.writeFile(workBook, `./${name}_CDC.xlsx`)
+      this.resetFileInput()
     },
     formatBirthday(date) {
       const dateArray = date.split('.')
@@ -501,6 +502,9 @@ export default {
         return str.substring(0, str.indexOf('鄉'))
       } 
       return ''
+    },
+    resetFileInput() {
+      this.$refs.fileInput.value=null;
     }
   }
 }
