@@ -14,7 +14,9 @@
   "main": "background.js",
   "dependencies": {
     "core-js": "^3.6.5",
-    "vue": "^2.6.11"
+    "read-excel-file": "^5.1.0",
+    "vue": "^2.6.11",
+    "xlsx": "^0.17.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",
