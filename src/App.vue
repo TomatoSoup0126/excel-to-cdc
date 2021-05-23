@@ -3,7 +3,8 @@
     <h1>快篩站轉CDC格式</h1>
     <p>選擇快篩站報表(.xlsx)，即會跳出轉換後的檔案供存檔</p>
     <div>
-      <input type="file" @change="handleFileChange" ref="fileInput">
+      <input type="file" @change="handleFileChange" ref="fileInput" id="fileInput" class="hiddenInput">
+      <el-button  @click="triggerFileUpload" :loading="isConverting">選取檔案</el-button>
     </div>
   </div>
 </template>
@@ -11,6 +12,7 @@
 <script>
 import readXlsxFile from 'read-excel-file'
 import xlsx from 'xlsx'
+import { Notification } from 'element-ui'
 
 const addressMap = {
   "基隆": {
@@ -439,9 +441,33 @@ const addressMap = {
 
 export default {
   name: 'App',
+  data() {
+    return {
+      isConverting: false
+    }
+  },
+  mounted() {
+    window.addEventListener("unhandledrejection", this.handleError)
+  },
+  beforeDestroy() {
+    window.removeEventListener("unhandledrejection", this.handleError)
+  },
   methods: {
+    handleError() {
+      this.resetFileInput()
+      Notification({
+        title: '錯誤',
+        message: '檔案格式可能有誤、或有密碼保護',
+        type: 'error',
+        position: 'bottom-right'
+      })
+    },
+    triggerFileUpload() {
+      document.querySelector('#fileInput').click()
+    },
     handleFileChange(e) {
-      let file = e.target.files[0];
+      this.isConverting = true
+      const file = e.target.files[0]
       readXlsxFile(file).then((rows) => {
         this.exportCdcExcel(rows, file.name.split('.')[0])
       })
@@ -551,7 +577,8 @@ export default {
       return ''
     },
     resetFileInput() {
-      this.$refs.fileInput.value=null;
+      this.$refs.fileInput.value=null
+      this.isConverting = false
     }
   }
 }
@@ -565,5 +592,14 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+
+.hiddenInput {
+  display: none;
+}
+
+.alert-block {
+  width: 50%;
+  margin: 10px auto;
 }
 </style>

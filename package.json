@@ -15,6 +15,7 @@
   "main": "background.js",
   "dependencies": {
     "core-js": "^3.6.5",
+    "element-ui": "^2.15.1",
     "read-excel-file": "^5.1.0",
     "vue": "^2.6.11",
     "xlsx": "^0.17.0"
@@ -24,6 +25,7 @@
     "@vue/cli-plugin-eslint": "~4.5.0",
     "@vue/cli-service": "~4.5.0",
     "babel-eslint": "^10.1.0",
+    "babel-plugin-component": "^1.1.1",
     "electron": "^12.0.0",
     "electron-devtools-installer": "^3.1.0",
     "eslint": "^6.7.2",
