@@ -500,9 +500,9 @@ export default {
       const jsonWorkSheet = xlsx.utils.json_to_sheet(jsonData)
 
       let workBook = {
-        SheetNames: ['jsonWorkSheet'],
+        SheetNames: ['通報清冊'],
         Sheets: {
-          'jsonWorkSheet': jsonWorkSheet,
+          '通報清冊': jsonWorkSheet,
         }
       }
 
