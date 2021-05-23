@@ -443,7 +443,6 @@ export default {
     handleFileChange(e) {
       let file = e.target.files[0];
       readXlsxFile(file).then((rows) => {
-        console.log(rows)
         this.exportCdcExcel(rows, file.name.split('.')[0])
       })
     },
