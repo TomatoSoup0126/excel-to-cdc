@@ -473,24 +473,33 @@ export default {
       })
     },
     exportCdcExcel(rows, name) {
-      rows.shift()
-      rows.shift()
-      rows.shift() // 移除多餘兩行與表頭
-      let jsonData = rows.map(row => {
+      const header = rows.find(row => row.some(item => item === '看診日'))
+      const columnMap = {
+        date: header.indexOf('看診日'),
+        id: header.indexOf('身分證'),
+        name: header.indexOf('姓名'),
+        birthday: header.indexOf('生日'),
+        gender: header.indexOf('性別'),
+        officePhone: header.indexOf('電話(公)'),
+        phone: header.indexOf('手機'),
+        address: header.indexOf('通訊地址')
+      }
+
+      const jsonData = rows.filter(row => typeof row[columnMap.date] === 'number').map(row => {
         return {
-          "身份證字號/護照號碼(不可超過10碼)": row[5],
-          "姓名(不可超過30字)": row[4],
-          "出生日期(請依格式填寫)": this.formatBirthday(row[7]),
-          "性別(請選代碼)": this.formatGender(row[6]),
+          "身份證字號/護照號碼(不可超過10碼)": row[columnMap.id],
+          "姓名(不可超過30字)": row[columnMap.name],
+          "出生日期(請依格式填寫)": this.formatBirthday(row[columnMap.birthday]),
+          "性別(請選代碼)": this.formatGender(row[columnMap.gender]),
           "職業(請選代碼)": '21-其他',
-          "國籍別暨非本國居民身分(請選代碼)": this.formatCitizenship(row[5]),
-          "國家(請選代碼)": this.formatCountry(row[5]),
-          "公司電話(選填/不可超過30碼)": this.formatPhone(row[9]),
-          "手機號碼(選填/不可超過30碼)": this.formatPhone(row[10]),
-          "居住地址(選填/不可超過200字)": row[11],
-          "居住縣市鄉鎮(請選代碼)": this.formatPostCode(row[11]),
-          "發病日(提醒：如發病日晚於報告日期，將因系統檢核錯誤而無法於法傳系統中修改該筆通報單資料)(請依格式填寫)": this.formatDate(row[0]),
-          "診斷日(請依格式填寫)": this.formatDate(row[0]),
+          "國籍別暨非本國居民身分(請選代碼)": this.formatCitizenship(row[columnMap.id]),
+          "國家(請選代碼)": this.formatCountry(row[columnMap.id]),
+          "公司電話(選填/不可超過30碼)": this.formatPhone(row[columnMap.officePhone]),
+          "手機號碼(選填/不可超過30碼)": this.formatPhone(row[columnMap.phone]),
+          "居住地址(選填/不可超過200字)": row[columnMap.address],
+          "居住縣市鄉鎮(請選代碼)": this.formatPostCode(row[columnMap.address]),
+          "發病日(提醒：如發病日晚於報告日期，將因系統檢核錯誤而無法於法傳系統中修改該筆通報單資料)(請依格式填寫)": this.formatDate(row[columnMap.date]),
+          "診斷日(請依格式填寫)": this.formatDate(row[columnMap.date]),
           "檢體採檢(有/無)": '是',
           "主要症狀(有/無)": '無',
           "新增原因(不可超過200字)": '篩檢'
@@ -499,7 +508,7 @@ export default {
 
       const jsonWorkSheet = xlsx.utils.json_to_sheet(jsonData)
 
-      let workBook = {
+      const workBook = {
         SheetNames: ['通報清冊'],
         Sheets: {
           '通報清冊': jsonWorkSheet,
